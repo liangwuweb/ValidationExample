@@ -21,6 +21,8 @@ namespace ValidationExample.Controllers
                 //        errorList.Add(error.ErrorMessage);
                 //    }
                 //}
+
+                // get modelstate errors from model validation
                 string errors = string.Join("\n", ModelState.Values.SelectMany(value => value.Errors).Select(err => err.ErrorMessage));
                 return BadRequest(errors);
             }
