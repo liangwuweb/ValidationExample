@@ -4,13 +4,13 @@ using ValidationExample.CustomValidators;
 
 namespace ValidationExample.Models
 {
-    public class Person
+    public class Person : IValidatableObject
     {   
         // 0 is represent the proporties name
         [Required(ErrorMessage ="{0} name cannot be empty!")]
         [Display(Name = "Person Name")]
         [StringLength(40, MinimumLength = 3, ErrorMessage = "{0} should be between {2} and {1} characters" )]
-        [RegularExpression("^[A-Za-z .]$", ErrorMessage = "{0} should contain only alphabets, space and dot")]
+        [RegularExpression("^[A-Za-z .]*$", ErrorMessage = "{0} should contain only alphabets, space and dot")]
         public string? PersonName { get; set; }
 
         [EmailAddress(ErrorMessage = "{0} should be a proper email address")]
@@ -40,6 +40,8 @@ namespace ValidationExample.Models
         [DateRangeValidator("FromDate", ErrorMessage = "'From Date' should be older than or equal to 'To date'")]
         public DateTime? ToDate { get; set; }
 
+        public int? Age { get; set; }
+
         public override string ToString()
         {
             return $"Person object\n " +
@@ -50,6 +52,15 @@ namespace ValidationExample.Models
                 $"ConfirmPassword: {ConfirmPassword}" +
                 $"Price: {Price}" 
                 ;
+        }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (!DateOfBirth.HasValue && !Age.HasValue) {
+                // yield keyword allows to retur more than one value
+                yield return new ValidationResult("Either DOB or Age is empty", new[] { nameof(Age) });
+            
+            }
         }
     }
 }
