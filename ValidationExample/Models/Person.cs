@@ -35,6 +35,11 @@ namespace ValidationExample.Models
         [MinimumYearValidator(2005)]
         public DateTime? DateOfBirth { get; set; }
 
+        public DateTime? FromDate { get; set; }
+
+        [DateRangeValidator("FromDate", ErrorMessage = "'From Date' should be older than or equal to 'To date'")]
+        public DateTime? ToDate { get; set; }
+
         public override string ToString()
         {
             return $"Person object\n " +
